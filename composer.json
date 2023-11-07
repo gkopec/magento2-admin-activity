@@ -2,11 +2,9 @@
     "name": "genius-dev/module-admin-activity",
     "description": "The Admin Activity extension makes it easy to track all admin activity and revert the modification.",
     "type": "magento2-module",
-    "version": "1.0.8",
     "license": [
         "OSL-3.0"
     ],
-    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Kiwi Commerce Ltd",
