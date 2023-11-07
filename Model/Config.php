@@ -103,7 +103,7 @@ class Config
             }
         }
 
-        return false;
+        return [];
     }
 
     /**

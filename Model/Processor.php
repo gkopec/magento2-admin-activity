@@ -242,7 +242,7 @@ class Processor
             $this->initAction = $fullActionName;
         }
         $this->lastAction = $fullActionName;
-        $this->eventConfig = $this->config->getEventByAction($fullActionName);
+        $this->eventConfig = $this->config->getEventByAction($fullActionName) ?? [];
         if (isset($this->eventConfig['post_dispatch'])) {
             $this->_callPostDispatchCallback();
         }
@@ -432,6 +432,10 @@ class Processor
      */
     public function _initLog()
     {
+        if (!$this->eventConfig) {
+            return;
+        }
+
         $activity = $this->activityFactory->create();
 
         if ($this->authSession->isLoggedIn()) {
@@ -628,16 +632,16 @@ class Processor
         if ($this->helper->isPageVisitEnable()
             && $this->isValidAction($module, $this->lastAction)) {
 
-            $activity = $this->_initLog();
+            if($activity = $this->_initLog()) {
+                $activity->setActionType('view');
+                $activity->setIsRevertable(0);
 
-            $activity->setActionType('view');
-            $activity->setIsRevertable(0);
+                if (!$activity->getModule()) {
+                    $activity->setModule($this->escapeString($module));
+                }
 
-            if (!$activity->getModule()) {
-                $activity->setModule($this->escapeString($module));
+                $activity->save();
             }
-
-            $activity->save();
         }
     }
 }
